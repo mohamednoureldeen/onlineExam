@@ -1,21 +1,49 @@
 <section class="flex flex-col items-center my-auto px-14 lg:px-0   ">
     <div class=" rounded-2xl md:w-[25.625rem]">
         <h2 class="text-[1.5488rem] font-[Inter] font-bold mb-6">Sign in</h2>
-        <form class="flex flex-col max-w-[25.625rem]">
+        <form class="flex flex-col max-w-[25.625rem]" [formGroup]="loginForm" (ngSubmit)="login()">
             <div class="flex flex-col items-center justify-center w-full gap-8">
                 <div>
-                    <input type="email" placeholder="Enter Email" class=" w-[25.625rem] h-[3.505rem] p-3 border rounded-lg focus:outline-none focus:ring-2 bg-gray-50 focus:ring-blue-500">
+                    <input type="email" formControlName="email" placeholder="Enter Email" class="invalid:border-red-600 w-[25.625rem] h-[3.505rem] p-3 border rounded-lg 
+                    focus:outline-none focus:ring-2 bg-gray-50 focus:ring-blue-500">
+                    @let emailControl = loginForm.get('email');
+                    @if (emailControl?.errors && emailControl?.touched) {
+                        <div class="mt-2 text-red-600 dark:text-red-400 text-sm">
+                            @if (emailControl?.hasError('required')) {
+                                <p>This field is required</p>
+                            }
+                            @else if (emailControl?.hasError('email')) {
+                                <p>Please enter a valid email</p>
+                            }
+                        </div>
+                    }
                 </div>
-                <div class="relative mb-4 w-[25.625rem] h-[3.505rem]">
-                    <input type="password" placeholder="Password" class="w-full h-full p-3 border rounded-lg focus:outline-none focus:ring-2 bg-gray-50 focus:ring-blue-500">
-                <span class="absolute right-4 top-4 flex items-center text-gray-400 cursor-pointer">
-                    <span class="w-[1.5713rem] h-[1.6319rem]"><img src="images/icons/fluent_eye-20-filled.png"></span>
-                </span>
+                <div class="relative flex flex-col w-[25.625rem]">
+                    <input type="password" formControlName="password" placeholder="Password" class="invalid:border-red-600 w-[25.625rem] h-[3.505rem] p-3 border rounded-lg 
+                    focus:outline-none focus:ring-2 bg-gray-50 focus:ring-blue-500">
+                    <div class="absolute right-4 top-4 flex items-center text-gray-400 cursor-pointer">
+                        <img src="images/icons/fluent_eye-20-filled.png" class="w-[1.5713rem] h-[1.6319rem]">
+                    </div>
+                    @let passwordControl = loginForm.get('password');
+                    @if (passwordControl?.errors && passwordControl?.touched) {
+                        <div class="text-red-600 dark:text-red-400 text-sm p-1">
+                            @if (passwordControl?.hasError('required')) {
+                                <p>This field is required</p>
+                            }
+                            @else if (passwordControl?.hasError('pattern')) {
+                                <p>Please enter a valid password, must contain at least one uppercase letter, one lowercase letter, and one number</p>
+                            }
+                        </div>
+                    }
+                    <a [routerLink]="['/forgot']" class="text-[#4461F2] hover:underline p-2 text-right font-[poppins] font-[400] text-[1rem]">Recover Password ?</a>
                 </div>
-            </div>
-            
-            <a [routerLink]="['/forgot']" class="text-[#4461F2]  hover:underline mb-6 right-0 text-right font-[poppins] font-[400] text-[1rem]">Recover Password ?</a>
-            <button type="submit" class="btn-main">Sign in</button>
+            </div>                
+            <button [disabled]="loginForm.invalid"
+             type="submit" class="btn-main disabled:opacity-50 disabled:cursor-not-allowed">Sign in
+                @if (isLoading) {
+                    <span><i class="fas fa-spin fa-spinner"></i></span>
+                }
+            </button>
         </form>
         <div class="flex flex-col items-center justify-center w-[25.625rem] ">
             <div class="flex items-center w-full my-8">
@@ -51,4 +79,5 @@
             
         </div>
     </div>
+
 </section>
