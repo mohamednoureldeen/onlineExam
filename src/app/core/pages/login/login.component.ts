@@ -13,7 +13,7 @@ export class LoginComponent {
   
   isLoading : boolean = false;
   private readonly formbulder = inject(FormBuilder);
-  private readonly rotter = inject(Router)
+  private readonly router = inject(Router)
   constructor(private authApiService:AuthApiService){}
 
 
@@ -30,7 +30,7 @@ export class LoginComponent {
         if(res.message === 'success'){
           setTimeout(( ) => {
             localStorage.setItem('userToken', res.token);
-            this.rotter.navigate(['/']);
+            this.router.navigate(['/']);
           },  500);
           this.isLoading = false
         }
