@@ -1,7 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { AuthApiService } from 'auth-api';
+import { IauthTokenState } from '../../layout/auth-layout/store/auth.model';
+import { loginSuccess } from '../../layout/auth-layout/store/auth.actions';
+import { map, Observable } from 'rxjs';
+import { selectAuthToken } from '../../layout/auth-layout/store/auth.selectors';
 
 @Component({
   selector: 'app-login',
@@ -10,12 +15,18 @@ import { AuthApiService } from 'auth-api';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+
+  // token$: Observable<string | null>;
   
   isLoading : boolean = false;
   private readonly formbulder = inject(FormBuilder);
   private readonly router = inject(Router)
-  constructor(private authApiService:AuthApiService){}
-
+  constructor(
+    private authApiService:AuthApiService,
+    private store :Store<{auth: IauthTokenState}>,
+  ){
+    // {this.token$ = this.store.select(selectAuthToken).pipe(map((state: IauthState) => state.token))};
+  }
 
   loginForm:FormGroup = this.formbulder.group({
     email: [null,[Validators.required,Validators.email]],
@@ -29,6 +40,8 @@ export class LoginComponent {
       next:(res)=>{
         if(res.message === 'success'){
           setTimeout(( ) => {
+            this.store.dispatch(loginSuccess({token: res.token}));
+            // this.token$.subscribe(token => console.log('Token from Store:', token));
             localStorage.setItem('userToken', res.token);
             this.router.navigate(['/']);
           },  500);

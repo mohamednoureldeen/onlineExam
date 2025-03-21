@@ -55,7 +55,6 @@ export class AuthApiService implements AuthApi {
       catchError((err: any) => of(err))
     );
   }
-
   resetPassword(data: IresetPasswordData): Observable<IresetPasswordRes> {
     // const url = `${this.baseUrl}${AuthApiEndpoints.RESET_PASSWORD}`;
     return this.httpClient.put(this.getUrl(AuthApiEndpoints.RESET_PASSWORD), data).pipe(
@@ -63,9 +62,5 @@ export class AuthApiService implements AuthApi {
       catchError((err: any) => of(err))
     );
   }
-
-
-
-
 }
 
