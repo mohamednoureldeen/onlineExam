@@ -1,12 +1,15 @@
 import { Routes } from '@angular/router';
 import { AuthLayoutComponent } from './core/layout/auth-layout/auth-layout.component';
 import { NotfoundComponent } from './core/pages/notfound/notfound.component';
+import { logedGuard } from './core/guards/loged.guard';
+import { authGuard } from './core/guards/auth.guard';
+import { BlankLayoutComponent } from './core/layout/blank-layout/blank-layout/blank-layout.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     {
         path: '',
-        component: AuthLayoutComponent,
+        component: AuthLayoutComponent, canActivate:[logedGuard],
         children: [
             {
                 path: 'login',
@@ -27,6 +30,17 @@ export const routes: Routes = [
             
         ],
        
+    },
+    {
+        path: '',
+        component: BlankLayoutComponent, canActivate:[authGuard],
+        children: [
+            {
+                path: 'dashboard',
+                title: 'dashboard',
+                loadComponent: () => import('./core/pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+        ]
     },
     { path: '**', component: NotfoundComponent }
 ];
